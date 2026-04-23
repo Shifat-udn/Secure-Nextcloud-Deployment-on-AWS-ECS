@@ -74,3 +74,18 @@ These settings are essential for services such as ECS task communication and EFS
 
 <p>The Public Route Table routes outbound traffic to the Internet Gateway, enabling external access for the Application Load Balancer. The Private Route Table directs all outbound traffic to the LAN interface of a pfSense firewall appliance.
 This design enforces centralized traffic inspection and control. All outbound communication from private resources (e.g., ECS tasks) is routed through the firewall before reaching external services.</p>
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/Subnets.png" />
+</p>
+Traffic is further restricted using Security Groups:
+<ul>
+<li>ALB Security Group: Allows inbound HTTPS (port 443) from the internet and forwards requests to ECS services. </li>
+<li>ECS Security Group: Accepts traffic only from the ALB security group.</li> 
+<li>Firewall Security Group: Controls inbound and outbound traffic for inspection and policy enforcement.</li> 
+</ul>
+<h4>Outbound Traffic Control</h4>
+All outbound traffic from ECS workloads—including Container image pulls (e.g., Docker Hub / ECR). File system access (e.g., EFS mounts) is routed through the pfSense firewall. 
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/security-group.png" />
+</p>
+
