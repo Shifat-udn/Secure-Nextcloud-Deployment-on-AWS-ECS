@@ -89,3 +89,39 @@ All outbound traffic from ECS workloads—including Container image pulls (e.g.,
   <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/security-group.png" />
 </p>
 
+## Network Virtual Appliance ( PFSense ) : 
+To enforce controlled and auditable network access, a Network Virtual Appliance (NVA) is deployed using pfSense within the VPC. This design introduces a centralized security layer between private workloads and external services.
+The NVA enables granular, policy-based access from private subnets that greatly reduce attack surface. In this case, it will allow outbound access to Docker Hub container registries, Provide secure VPN access for developers into the private environment also Perform traffic inspection using built-in firewall capabilities, with optional IDS/IPS features with Suricata packages. 
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/PFsense-ui.png" />
+</p>
+Pfsense have two Network interfaces. One attached to public subnet as WAN another to Private Network interface LAN. All outbound traffic from private subnets is routed through the LAN interface, ensuring that every request is inspected and governed by firewall rules before reaching the internet. 
+To maintain a least-privilege model, only required outbound traffic is permitted from the private subnets:
+
+<b>Allowed Rules (LAN → WAN):</b>
+HTTPS Access (Port 443)
+<ul>
+<li>Source: 10.111.0.0/16</li>
+<li>Destination: Any</li>
+<li>Protocol: TCP</li>
+<li>Port: 443</li>
+<li>Purpose: Secure access to external services such as container registries, APIs, and updates</li>
+</ul>
+NFS Access (Port 2049)
+<ul>
+<li>Source: 10.111.0.0/16</li>
+<li>Destination: EFS mount targets</li>
+<li>Protocol: TCP</li>
+<li>Port: 2049</li>
+<li>Purpose: Enable ECS tasks to mount and communicate with network file storage</li>
+</ul>
+Implicit Deny:
+-	All other outbound traffic is denied by default unless explicitly allowed, enforcing strict egress control. 
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/PFsense-rules.png" />
+</p>
+
+## Amazon Elastic File System EFS:
+
+EFS is managed cloud storage service for AWS. We will use it to keep our files for the application. It provides persistent, shared storage for containers, ensuring data remains available across task restarts, redeployments. 
+We will create EFS with two mount points attached to the private subnets where ECS tasks reside. 
