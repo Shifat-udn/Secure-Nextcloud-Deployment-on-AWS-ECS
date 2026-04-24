@@ -125,3 +125,42 @@ Implicit Deny:
 
 EFS is managed cloud storage service for AWS. We will use it to keep our files for the application. It provides persistent, shared storage for containers, ensuring data remains available across task restarts, redeployments. 
 We will create EFS with two mount points attached to the private subnets where ECS tasks reside. 
+
+<table> <tbody> <tr>
+      <td><img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/EFS-wz-init.png" /></td>
+      <td><img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/EFS-wz-2.png" /></td>
+      <td><img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/EFS-wz-3.png" /></td>
+    </tr>
+  </tbody>
+</table>
+To enforce strict separation of data and permissions between containers, EFS Access Points are used. These provide application-specific entry points into the file system with defined POSIX identities and permissions.
+
+The configuration includes three access points:
+
+<b>Nextcloud (Application Data)</b>
+<ul>
+<li>POSIX User: 33:33 (www-data)</li>
+<li>Permissions: 770</li>
+<li>Purpose: Store Nextcloud application files and user data</li>
+</ul>
+<b>Nextcloud (Additional Data Config)</b>
+<ul>
+<li>POSIX User: 33:33</li>
+<li>Permissions: 770</li>
+<li>Purpose: Separate logical storage for configuration or extended data</li>
+</ul>
+<b>MariaDB (Database Storage)</b>
+<ul>
+<li>POSIX User: 999:999</li>
+<li>Permissions: 770</li>
+<li>Purpose: Store database files securely with isolated access</li>
+</ul>
+This approach ensures that each container interacts only with its designated storage path, following the principle of least privilege.
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/EFS-ap.png" />
+</p>
+Create Access Point:
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/EFS-ap-create.png" />
+</p>
+Policy: Now we need to create policy, so that only Task definition with task role ecsTaskExecutionRole can access the EFS access points 
