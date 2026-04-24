@@ -164,3 +164,77 @@ Create Access Point:
   <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/EFS-ap-create.png" />
 </p>
 Policy: Now we need to create policy, so that only Task definition with task role ecsTaskExecutionRole can access the EFS access points 
+
+```sh
+{
+    "Version": "2012-10-17",
+    "Id": "efs-policy-wizard-5c81e59a-fa0a-4721-bae9-391d75ce5911",
+    "Statement": [
+
+        {
+            "Sid": "efs-statement-34cbff05-d655-407a-9336-3cd0807638c1",
+            "Effect": "Deny",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "*",
+            "Resource": "arn:aws:elasticfilesystem:us-east-1:XXXXXXXXXXXX:file-system/fs-0b3e3ede220c71b1d",
+            "Condition": {
+                "Bool": {
+                    "aws:SecureTransport": "false"
+                }
+            }
+        },
+        {
+            "Sid": "Allow-ECS",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::XXXXXXXXXXXX:role/service-role/ecsTaskExecutionRole"
+            },
+            "Action": [
+                "elasticfilesystem:ClientMount",
+                "elasticfilesystem:ClientWrite"
+            ],
+            "Resource": "arn:aws:elasticfilesystem:us-east-1:XXXXXXXXXXXX:file-system/fs-0b3e3ede220c71b1d",
+            "Condition": {
+                "StringEquals": {
+                    "elasticfilesystem:AccessPointArn": "arn:aws:elasticfilesystem:us-east-1:XXXXXXXXXXXX:access-point/*"
+                }
+            }
+        }
+    ]
+}
+```
+
+## Route 53:
+ 
+We need to add a public hosted zone on Route 53 for our domain. So we can add A record for Application Load Balancer also do DNS validation for issuing certificate.
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/EFS-ap-create.png" />
+</p>
+
+## Certificate Manager (ACM):
+On the AWS Certificate Manager. We need to request a public certificate. Non-exportable will work for us and it’s free. Also, we will go for Domain validate option. Once the issue request is created, AWS will show us a CNAME record. We need to add it to Router53. Then the certificate will be issued. We will use is on Application load balancer for HTTPS. 
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/ACM1.png" />
+</p>
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/ACM2.png" />
+</p>
+
+## Application Load Balancer (ALB):
+ALB is Layer 7 (HTTP/HTTPS) load balancing service within Elastic Load Balancing (ELB). It routes traffic towards nextcloud container as targets also do certificate termination.
+<p>
+<b>Target group :</b> A target group is created to route traffic from the ALB to ECS tasks.</p>
+<ul>
+<li>Target Type: IP (required for ECS with awsvpc networking mode)</li>
+<li>Protocol: HTTP</li>
+<li>Health Check Path: /status.php</li>
+<li>Health Check Protocol: HTTP</li>
+<li>Success Codes: 200–499</li>
+</ul>
+The broader success code range ensures that application-level responses (including redirects or client errors) do not prematurely mark targets as unhealthy. Initially, the target group remains empty. When the ECS service launches tasks, it automatically registers the task IPs with the target group, enabling dynamic scaling and service discovery.
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/ALB-TG-health.png" />
+</p>
+
