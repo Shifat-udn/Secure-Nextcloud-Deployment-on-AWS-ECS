@@ -237,4 +237,23 @@ The broader success code range ensures that application-level responses (includi
 <p align="center">
   <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/ALB-TG-health.png" />
 </p>
+<p><b>Load Balancer:</b> We will add two listener HTTP:80 and HTTPS:443. HTTP:80 will be simple redirect to HTTPS. On HTTPS Listener we will forward the request to the target group. Here, We will add Certificate on secure listener settings from the Certificate Manager (ACM). Finally to enhance Security we will add HSTS header as response Attribute. It will forces web browsers to interact with nextcloud exclusively over encrypted HTTPS connections</p>
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/https-add-hsts.png" />
+</p>
+
+## Amazon Elastic Container Service ECS :
+
+<p>The application is deployed using Amazon Elastic Container Service, which orchestrates containerized workloads in a highly available and scalable manner.</p>
+<p><b>Cluster and Architecture:</b> An ECS cluster is created to host the application. Within this cluster:</p>
+A single task definition runs two tightly coupled containers:
+<ul><li>Nextcloud (application)</li><li>MariaDB (database)</li></ul>
+Both containers run within the same task using awsvpc networking mode, allowing them to communicate internally via 127.0.0.1 (localhost). This eliminates the need for external database exposure and improves security.
+To ensure proper startup order:
+<ul>
+<li>The Nextcloud container depends on the MariaDB container</li>
+<li>A health check is defined for MariaDB</li>
+<li>ECS ensures that Nextcloud starts only after MariaDB is healthy and ready to accept connections</li>
+</ul>
+This guarantees reliable initialization and prevents application errors during startup
 
