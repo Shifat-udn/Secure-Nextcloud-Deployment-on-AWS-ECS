@@ -3,8 +3,9 @@
 On the WAF ACL section we have defined log location  
 
 <p align="center">
-  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/troubleshoot-WAF.png" />
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/troubleshoot-WAF .png" />
 </p>
+
 now go to Amazon CloudWatch and find the location (i.e. /aws-waf-logs-xxxx ) and Analyze logs using filters such as:
 -	%BLOCK% → to identify blocked requests
 -	Rule IDs → to understand which rule triggered the action
