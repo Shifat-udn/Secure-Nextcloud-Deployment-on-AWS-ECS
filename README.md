@@ -256,4 +256,47 @@ To ensure proper startup order:
 <li>ECS ensures that Nextcloud starts only after MariaDB is healthy and ready to accept connections</li>
 </ul>
 This guarantees reliable initialization and prevents application errors during startup
+<p><b>Task Definition:</b> We will have two containers; Maria db and nextcloud. Maria DB we will use mariadb:10.6 image on port 3306. We will user four environment variables to create db and user for the application. We also need a health check for MariaDB so once the mariadb is healthy the service can start nextcloud container.</p>
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/ECS-TD-health.png" />
+</p>
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/ECS-TD-maria.png" />
+</p>
+<p>Now, for the Nextcloud app we will use latest official image. We need to provide some Environment variables with it like DB and admin user and password. Also, as we will use application load balancer we need to provide NEXTCLOUD_TRUSTED_DOMAINS , OVERWRITECLIURL, OVERWRITEPROTOCOL and TRUSTED_PROXIES. </p>
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/ECS-TD-nextcloud.png" />
+</p>
+<p>Finally, we need to add EFS Volumes to the containers so it will have persistent, shared storage also ensures data remains available across task restarts, redeployments. Now according to EFS policy, we need to enable Transit Encryption and IAM authorization for the mount point. </p>
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/ECS-mount-point.png" />
+</p>
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/ECS-Volume.png" />
+</p>
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/ECS-Volume2.png" />
+</p>
+<p>
+Finally for logging add Log group with stream prefix
+The full task definition file is on the git.  
+</p>
+<p>
+<b>Services:</b> Now we will use the task definition to deploy the ECS Service for NextCloud. We will use the latest version on task definition and run two tasks with availability zone rebalancing. Also, we will add a health check grace to give next cloud app to install and enable exec mode to troubleshoot the container if needed. Two other area to focus is Networking and Load balancing.
+</p>
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/ECS-Service1.png" />
+</p>
+We need to deploy the task into the private subnets with proper security group. Make sure to disable auto-assign public IP. 
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/ECS-Service2.png" />
+</p>
+In the load balancing section select the nextcloud app with right target group and Listener
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/ECS-Service3.png" />
+</p>
+And deploy the services. After some time, we can see the services are running. Also, on the CloudWatch log group we can see nextcloud installation successful. Now we can go to the Load balancer’s URL to see the login screen.
 
+## Web Application Firewall (WAF):
+WAF will protect nextcloud application by filtering, monitoring, and blocking HTTPS traffic. Acting as an intermediary between a user and the app, it defends against application-layer attacks like SQL injection, cross-site scripting (XSS), and file inclusion.
+Here in AWS during the creation of WAF Web ACL it will create an initial protection pack based on your application type. That will include AWS common rules for XSS, bad inputs, SQLi and Geo Rules.
