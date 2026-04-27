@@ -1,21 +1,11 @@
 ## Web Application Firewall - Troubleshoot
 
-On the task defination we have defined log location  
+On the WAF ACL section we have defined log location  
 
-```sh
-
-            "logConfiguration": {
-                "logDriver": "awslogs",
-                "options": {
-                    "awslogs-group": "/ecs/ESC-Next-Cloud",
-                    "awslogs-create-group": "true",
-                    "awslogs-region": "us-east-1",
-                    "awslogs-stream-prefix": "mra"
-                },
-                "secretOptions": []
-            }
-```
-now go to Amazon CloudWatch and find the location (i.e. /ecs/ESC-Next-Cloud) and Analyze logs using filters such as:
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/troubleshoot-WAF.png" />
+</p>
+now go to Amazon CloudWatch and find the location (i.e. /aws-waf-logs-xxxx ) and Analyze logs using filters such as:
 -	%BLOCK% → to identify blocked requests
 -	Rule IDs → to understand which rule triggered the action
 This helps distinguish between legitimate threats and false positives.
