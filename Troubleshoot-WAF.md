@@ -19,6 +19,7 @@ To handle these false positives without weakening overall protection, a scope-do
 </p>
 for examlpe this scenario we need to put this rules 
 
+``` sh
 NOT (
 ((URI starts with /remote.php/dav/ ) AND (HTTP method = PROPFIND)) 
 OR 
@@ -26,6 +27,9 @@ OR
 )
 goes like this 
 
+```
+json
+ 
 ``` sh
 {
   "NotStatement": {
