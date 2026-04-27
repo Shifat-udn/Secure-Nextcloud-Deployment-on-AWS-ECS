@@ -300,3 +300,47 @@ And deploy the services. After some time, we can see the services are running. A
 ## Web Application Firewall (WAF):
 WAF will protect nextcloud application by filtering, monitoring, and blocking HTTPS traffic. Acting as an intermediary between a user and the app, it defends against application-layer attacks like SQL injection, cross-site scripting (XSS), and file inclusion.
 Here in AWS during the creation of WAF Web ACL it will create an initial protection pack based on your application type. That will include AWS common rules for XSS, bad inputs, SQLi and Geo Rules.
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/WAF-init.png" />
+</p>
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/WAF-ruleset.png" />
+</p>
+<b>Tuning WAF:</b>
+Generate application traffic (normal usage and test scenarios) and enable logging to Amazon CloudWatch. Analyze logs using filters such as:
+<ul>
+<li>%BLOCK% → to identify blocked requests</li>
+<li>Rule IDs → to understand which rule triggered the action</li>
+</ul>
+This helps distinguish between legitimate threats and false positives.
+We have seen nextcloud's PROPFIND method (a WebDAV request) triggers AWSManagedRulesCommonRuleSet because the payload contains <?xml, which WAF interprets as possible XSS. 
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/WAF-log1.png" />
+</p>
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/WAF-log2.png" />
+</p>
+Another Block comes when we try to update the theme image due to size restriction.
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/WAF-log3.png" />
+</p>
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/WAF-log4.png" />
+</p>
+To handle these false positives without weakening overall protection, a scope-down rule is implemented. The logic ensures that managed rules are applied except for specific known-safe scenarios:
+NOT (
+((URI starts with /remote.php/dav/ ) AND (HTTP method = PROPFIND)) 
+OR 
+((URI starts with /apps/theming/ ) AND (HTTP method = POST))
+)
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/WAF-scopedown.png" />
+</p>
+after making all the changes , we can see Nextcloud container are running and portal is up at our domain. now we can use admin user and password mantioned at task definition
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/Success-log.png" />
+</p>
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/Success-web.png" />
+</p>
+Final thought, Use Database services instead of using maria DB container with EFS. Sometime new instance cannot lock-on to the existing flies 
