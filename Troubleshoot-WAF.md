@@ -23,7 +23,9 @@ This helps distinguish between legitimate threats and false positives.
 ## Scopedown - WAF rules 
 
 To handle these false positives without weakening overall protection, a scope-down rule is implemented. The logic ensures that managed rules are applied except for specific known-safe scenarios:
-
+<p align="center">
+  <img src="https://github.com/Shifat-udn/Secure-Nextcloud-Deployment-on-AWS-ECS/blob/main/images/WAF-scopedown.png" />
+</p>
 for examlpe this scenario we need to put this rules 
 
 NOT (
