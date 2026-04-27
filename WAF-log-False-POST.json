@@ -1,0 +1,171 @@
+{
+    "timestamp": 1776457463308,
+    "formatVersion": 1,
+    "webaclId": "arn:aws:wafv2:us-east-1:757322203545:regional/webacl/vision-web-app-nginx/385bd5aa-4de2-477f-8f1d-dd308c94aec9",
+    "terminatingRuleId": "AWS-AWSManagedRulesCommonRuleSet",
+    "terminatingRuleType": "MANAGED_RULE_GROUP",
+    "action": "BLOCK",
+    "terminatingRuleMatchDetails": [],
+    "httpSourceName": "ALB",
+    "httpSourceId": "757322203545-app/nginx-app/0156371db223390d",
+    "ruleGroupList": [
+        {
+            "ruleGroupId": "AWS#AWSManagedRulesAntiDDoSRuleSet",
+            "terminatingRule": null,
+            "nonTerminatingMatchingRules": [],
+            "excludedRules": null,
+            "customerConfig": [
+                {
+                    "name": "SensitivityToBlock",
+                    "value": "LOW"
+                },
+                {
+                    "name": "SensitivityToChallenge",
+                    "value": "HIGH"
+                },
+                {
+                    "name": "UrisExemptFromChallenge",
+                    "value": "\\/api\\/|\\.(acc|avi|css|gif|ico|jpe?g|js|json|mp[34]|ogg|otf|pdf|png|tiff?|ttf|webm|webp|woff2?|xml)$"
+                },
+                {
+                    "name": "UsageOfChallengeAction",
+                    "value": "ENABLED"
+                }
+            ]
+        },
+        {
+            "ruleGroupId": "AWS#AWSManagedRulesCommonRuleSet",
+            "terminatingRule": {
+                "ruleId": "SizeRestrictions_BODY",
+                "action": "BLOCK",
+                "ruleMatchDetails": null
+            },
+            "nonTerminatingMatchingRules": [],
+            "excludedRules": null,
+            "customerConfig": null
+        }
+    ],
+    "rateBasedRuleList": [
+        {
+            "rateBasedRuleId": "arn:aws:wafv2:us-east-1:757322203545_MANAGED:regional/ipset/385bd5aa-4de2-477f-8f1d-dd308c94aec9_fcf14d5d-a515-47b0-b17b-23dc46b112f0_IPV4/fcf14d5d-a515-47b0-b17b-23dc46b112f0",
+            "rateBasedRuleName": "GlobalRateBasedRule",
+            "limitKey": "IP",
+            "maxRateAllowed": 1000,
+            "evaluationWindowSec": 300,
+            "limitValue": "96.47.191.94"
+        }
+    ],
+    "nonTerminatingMatchingRules": [
+        {
+            "ruleId": "BodySizeRestrictionRule",
+            "action": "COUNT",
+            "ruleMatchDetails": []
+        }
+    ],
+    "requestHeadersInserted": null,
+    "responseCodeSent": null,
+    "httpRequest": {
+        "clientIp": "96.47.191.94",
+        "country": "CA",
+        "headers": [
+            {
+                "name": "host",
+                "value": "test.vision.ztrafrica.com"
+            },
+            {
+                "name": "content-length",
+                "value": "706995"
+            },
+            {
+                "name": "sec-ch-ua-platform",
+                "value": "\"Windows\""
+            },
+            {
+                "name": "requesttoken",
+                "value": "C9rW4BeGhJFByzsJHYoDw1YQDRswRN60UmT6huV6NYE=:U6iMukT2y+VurQN+KOs0iBVCdXRgfaiGOCCizYgwcvI="
+            },
+            {
+                "name": "sec-ch-ua",
+                "value": "\"Google Chrome\";v=\"147\", \"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"147\""
+            },
+            {
+                "name": "sec-ch-ua-mobile",
+                "value": "?0"
+            },
+            {
+                "name": "x-requested-with",
+                "value": "XMLHttpRequest, XMLHttpRequest"
+            },
+            {
+                "name": "user-agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
+            },
+            {
+                "name": "accept",
+                "value": "application/json, text/plain, */*"
+            },
+            {
+                "name": "content-type",
+                "value": "multipart/form-data; boundary=----WebKitFormBoundaryXwCMJQaBP1MViWqm"
+            },
+            {
+                "name": "origin",
+                "value": "https://test.vision.ztrafrica.com"
+            },
+            {
+                "name": "sec-fetch-site",
+                "value": "same-origin"
+            },
+            {
+                "name": "sec-fetch-mode",
+                "value": "cors"
+            },
+            {
+                "name": "sec-fetch-dest",
+                "value": "empty"
+            },
+            {
+                "name": "accept-encoding",
+                "value": "gzip, deflate, br, zstd"
+            },
+            {
+                "name": "accept-language",
+                "value": "en-US,en;q=0.9"
+            },
+            {
+                "name": "priority",
+                "value": "u=1, i"
+            },
+            {
+                "name": "cookie",
+                "value": "nc_sameSiteCookielax=true; nc_sameSiteCookiestrict=true; __Host-nc_sameSiteCookielax=true; __Host-nc_sameSiteCookiestrict=true; oc_sessionPassphrase=uds6Bsy7wg4gBXOk%2FIpRrpzj%2BNpOyacNqq%2B74e%2BT6DVUN%2BozNygZYYo7n0BlnXZOtk1vcJw27S%2FywaI1DJ9EInoSCieqv%2BuZAzoAhJBGY2B%2FIk%2B216zatFR5UfiYolVr; oclwe6zjc1ee=7c3d8ec29105f0016238b811829f58ca; ocda1a1iyzqr=e98743b637a55b55f5f7a07c20273ab8; oca1r4jqos06=ed6e06c03e6b9f52f026cc9c2f75980c"
+            }
+        ],
+        "uri": "/apps/theming/ajax/uploadImage",
+        "args": "",
+        "httpVersion": "HTTP/2.0",
+        "httpMethod": "POST",
+        "requestId": "1-69e296f7-5dc1941e5a7550aa445ed8de",
+        "fragment": "",
+        "scheme": "https",
+        "host": "test.vision.ztrafrica.com"
+    },
+    "labels": [
+        {
+            "name": "awswaf:clientip:geo:country:CA"
+        },
+        {
+            "name": "awswaf:managed:aws:core-rule-set:SizeRestrictions_Body"
+        },
+        {
+            "name": "awswaf:clientip:geo:region:CA-ON"
+        }
+    ],
+    "oversizeFields": [
+        "REQUEST_BODY"
+    ],
+    "requestBodySize": 706995,
+    "requestBodySizeInspectedByWAF": 8192,
+    "ja3Fingerprint": "fafd65af9800b3a80fc977fd76be7c97",
+    "ja4Fingerprint": "t13d1516h2_8daaf6152771_e2868af24dc0"
+}

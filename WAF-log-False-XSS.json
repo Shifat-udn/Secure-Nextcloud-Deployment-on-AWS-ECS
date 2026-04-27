@@ -1,0 +1,180 @@
+{
+    "timestamp": 1776450264342,
+    "formatVersion": 1,
+    "webaclId": "arn:aws:wafv2:us-east-1:XXXXXXXXXXXX:regional/webacl/vision-web-app-nginx/385bd5aa-4de2-477f-8f1d-dd308c94aec9",
+    "terminatingRuleId": "AWS-AWSManagedRulesCommonRuleSet",
+    "terminatingRuleType": "MANAGED_RULE_GROUP",
+    "action": "BLOCK",
+    "terminatingRuleMatchDetails": [
+        {
+            "conditionType": "XSS",
+            "location": "BODY",
+            "matchedData": [
+                "<?",
+                "xml"
+            ],
+            "matchedFieldName": ""
+        }
+    ],
+    "httpSourceName": "ALB",
+    "httpSourceId": "XXXXXXXXXXXX-app/nginx-app/0156371db223390d",
+    "ruleGroupList": [
+        {
+            "ruleGroupId": "AWS#AWSManagedRulesAntiDDoSRuleSet",
+            "terminatingRule": null,
+            "nonTerminatingMatchingRules": [],
+            "excludedRules": null,
+            "customerConfig": [
+                {
+                    "name": "SensitivityToBlock",
+                    "value": "LOW"
+                },
+                {
+                    "name": "SensitivityToChallenge",
+                    "value": "HIGH"
+                },
+                {
+                    "name": "UrisExemptFromChallenge",
+                    "value": "\\/api\\/|\\.(acc|avi|css|gif|ico|jpe?g|js|json|mp[34]|ogg|otf|pdf|png|tiff?|ttf|webm|webp|woff2?|xml)$"
+                },
+                {
+                    "name": "UsageOfChallengeAction",
+                    "value": "ENABLED"
+                }
+            ]
+        },
+        {
+            "ruleGroupId": "AWS#AWSManagedRulesCommonRuleSet",
+            "terminatingRule": {
+                "ruleId": "CrossSiteScripting_BODY",
+                "action": "BLOCK",
+                "ruleMatchDetails": null
+            },
+            "nonTerminatingMatchingRules": [],
+            "excludedRules": null,
+            "customerConfig": null
+        }
+    ],
+    "rateBasedRuleList": [
+        {
+            "rateBasedRuleId": "arn:aws:wafv2:us-east-1:XXXXXXXXXXXX_MANAGED:regional/ipset/385bd5aa-4de2-477f-8f1d-dd308c94aec9_fcf14d5d-a515-47b0-b17b-23dc46b112f0_IPV4/fcf14d5d-a515-47b0-b17b-23dc46b112f0",
+            "rateBasedRuleName": "GlobalRateBasedRule",
+            "limitKey": "IP",
+            "maxRateAllowed": 1000,
+            "evaluationWindowSec": 300,
+            "limitValue": "96.47.191.94"
+        }
+    ],
+    "nonTerminatingMatchingRules": [],
+    "requestHeadersInserted": null,
+    "responseCodeSent": null,
+    "httpRequest": {
+        "clientIp": "96.47.191.94",
+        "country": "CA",
+        "headers": [
+            {
+                "name": "host",
+                "value": "test.vision.ztrafrica.com"
+            },
+            {
+                "name": "content-length",
+                "value": "566"
+            },
+            {
+                "name": "depth",
+                "value": "0"
+            },
+            {
+                "name": "sec-ch-ua-platform",
+                "value": "\"Windows\""
+            },
+            {
+                "name": "x-recognize-api-key",
+                "value": ""
+            },
+            {
+                "name": "requesttoken",
+                "value": "4R4u+oyiV2GyYFar3fLO8/dlxLlZY/x9wcmxFM9nqco=:j21vuOPrOSTRDy/hpLCXl6EyoN8zBcoauazGU5kpx54="
+            },
+            {
+                "name": "sec-ch-ua",
+                "value": "\"Google Chrome\";v=\"147\", \"Not.A/Brand\";v=\"8\", \"Chromium\";v=\"147\""
+            },
+            {
+                "name": "sec-ch-ua-mobile",
+                "value": "?0"
+            },
+            {
+                "name": "x-requested-with",
+                "value": "XMLHttpRequest"
+            },
+            {
+                "name": "user-agent",
+                "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.0.0 Safari/537.36"
+            },
+            {
+                "name": "accept",
+                "value": "text/plain,application/xml"
+            },
+            {
+                "name": "content-type",
+                "value": "text/plain;charset=UTF-8"
+            },
+            {
+                "name": "origin",
+                "value": "https://test.vision.ztrafrica.com"
+            },
+            {
+                "name": "sec-fetch-site",
+                "value": "same-origin"
+            },
+            {
+                "name": "sec-fetch-mode",
+                "value": "cors"
+            },
+            {
+                "name": "sec-fetch-dest",
+                "value": "empty"
+            },
+            {
+                "name": "accept-encoding",
+                "value": "gzip, deflate, br, zstd"
+            },
+            {
+                "name": "accept-language",
+                "value": "en-US,en;q=0.9"
+            },
+            {
+                "name": "priority",
+                "value": "u=1, i"
+            },
+            {
+                "name": "cookie",
+                "value": "nc_sameSiteCookielax=true; nc_sameSiteCookiestrict=true; __Host-nc_sameSiteCookielax=true; __Host-nc_sameSiteCookiestrict=true; oc_sessionPassphrase=uds6Bsy7wg4gBXOk%2FIpRrpzj%2BNpOyacNqq%2B74e%2BT6DVUN%2BozNygZYYo7n0BlnXZOtk1vcJw27S%2FywaI1DJ9EInoSCieqv%2BuZAzoAhJBGY2B%2FIk%2B216zatFR5UfiYolVr; oclwe6zjc1ee=7c3d8ec29105f0016238b811829f58ca; ocda1a1iyzqr=4f7e835de1d6d6cb1ea3d8d04785ec3a"
+            }
+        ],
+        "uri": "/remote.php/dav/files/admin/",
+        "args": "",
+        "httpVersion": "HTTP/2.0",
+        "httpMethod": "PROPFIND",
+        "requestId": "1-69e27ad8-1b83707e531dab4d3d9530a5",
+        "fragment": "",
+        "scheme": "https",
+        "host": "test.vision.ztrafrica.com"
+    },
+    "labels": [
+        {
+            "name": "awswaf:clientip:geo:country:CA"
+        },
+        {
+            "name": "awswaf:managed:aws:core-rule-set:CrossSiteScripting_Body"
+        },
+        {
+            "name": "awswaf:clientip:geo:region:CA-ON"
+        }
+    ],
+    "requestBodySize": 566,
+    "requestBodySizeInspectedByWAF": 566,
+    "ja3Fingerprint": "b3a1235b68bbf794d41913eb57cd7180",
+    "ja4Fingerprint": "t13d1516h2_8daaf6152771_e2868af24dc0"
+}

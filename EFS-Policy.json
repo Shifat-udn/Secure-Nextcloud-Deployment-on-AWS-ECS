@@ -1,0 +1,38 @@
+{
+    "Version": "2012-10-17",
+    "Id": "efs-policy-wizard-5c81e59a-fa0a-4721-bae9-391d75ce5911",
+    "Statement": [
+
+        {
+            "Sid": "efs-statement-34cbff05-d655-407a-9336-3cd0807638c1",
+            "Effect": "Deny",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "*",
+            "Resource": "arn:aws:elasticfilesystem:us-east-1:XXXXXXXXXXXX:file-system/fs-0b3e3ede220c71b1d",
+            "Condition": {
+                "Bool": {
+                    "aws:SecureTransport": "false"
+                }
+            }
+        },
+        {
+            "Sid": "Allow-ECS",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::XXXXXXXXXXXX:role/service-role/ecsTaskExecutionRole"
+            },
+            "Action": [
+                "elasticfilesystem:ClientMount",
+                "elasticfilesystem:ClientWrite"
+            ],
+            "Resource": "arn:aws:elasticfilesystem:us-east-1:XXXXXXXXXXXX:file-system/fs-0b3e3ede220c71b1d",
+            "Condition": {
+                "StringEquals": {
+                    "elasticfilesystem:AccessPointArn": "arn:aws:elasticfilesystem:us-east-1:XXXXXXXXXXXX:access-point/*"
+                }
+            }
+        }
+    ]
+}
